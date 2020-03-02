@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+$body-font-family: 'Montserrat', sans-serif;
+
+$typoOptions: display-4, display-3, display-2, display-1, headline, title, subtitle-1, subtitle-2, body-1, body-2, caption, overline;
+
+#app {
+  font-family: $body-font-family, sans-serif !important;
+  @each $typoOption in $typoOptions {
+    .#{$typoOption} {
+      font-family: $body-font-family, sans-serif !important;
+    }
+  }
+}
+
+.slide-leave-active,
+.slide-enter-active {
+  transition: 300ms;
+}
+.slide-enter {
+  transform: translate(100%, 0);
+}
+.slide-leave {
+  transform: translate(-100%, 0);
+}
+.slide-leave-to {
+  transform: translate(-100%, 0);
+}
+.slide-enter-to {
+  transform: translate(100%, 0);
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 300ms;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+li a {
+  text-decoration: none;
+}
