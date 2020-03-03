@@ -1,24 +1,16 @@
 <template>
-  <v-flex fill-height>
+  <v-flex fill-height class="pt-3">
     <v-tabs
       v-model="tab"
-      :centered="centered"
-      :grow="grow"
-      :vertical="vertical"
-      :right="right"
-      :prev-icon="prevIcon ? 'mdi-arrow-left-bold-box-outline' : undefined"
-      :next-icon="nextIcon ? 'mdi-arrow-right-bold-box-outline' : undefined"
-      :icons-and-text="icons"
+      grow
       height="40"
       color="green darken-2"
     >
-      <v-tabs-slider/>
-
       <v-tab
         v-for="(item, i) in tabs"
         :key="i"
         :href="`#tab-${i}`"
-        style="font-size: 13px;"
+        style="font-size: 11px;"
       >
         {{ item }}
         <v-icon v-if="icons">mdi-phone</v-icon>
@@ -28,6 +20,7 @@
         v-for="(collection, i) in collections"
         :key="i"
         :value="'tab-' + i"
+        class="px-3"
       >
         <v-card-title class="my-5">{{ collection.name }}</v-card-title>
         <v-divider/>
@@ -56,19 +49,9 @@ export default {
 
   name: 'Menu',
 
-  components: {
-
-  },
-
   data: () => ({
     tab: null,
-    icons: false,
-    centered: false,
-    grow: false,
-    vertical: false,
-    prevIcon: false,
-    nextIcon: false,
-    right: false,
+    grow: true,
     tabs: ['Foods', 'Beverages', 'Desserts'],
     collections: [
       {

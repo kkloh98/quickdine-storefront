@@ -1,7 +1,7 @@
 <template>
   <transition name="slide-right">
     <v-flex fill-height>
-      <v-card class="my-2 py-2 px-1" v-for="item in cart.orders" :key="item.variant_id">
+      <v-card class="ma-3" v-for="item in cart.orders" :key="item.variant_id">
         <v-row align="center" justify="space-around" class="px-3">
           <v-btn icon color="green darken-2" @click="minusQuantity(item.variant_id)"><v-icon size="15">mdi-minus</v-icon></v-btn>
           <span style="font-size: 13px;">{{ item.quantity }}</span>
@@ -11,7 +11,7 @@
         </v-row>
       </v-card>
       <div class="my-5"></div>
-      <v-card class="px-4">
+      <v-card class="px-3 mx-3">
         <v-row justify="space-between" class="py-2">
           <v-col class="text-left" style="font-size: 13px;">Subtotal</v-col>
           <v-col class="text-right font-weight-medium" style="font-size: 13px;">{{ formatPrice(total_price) }}</v-col>
