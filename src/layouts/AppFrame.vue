@@ -48,7 +48,7 @@ export default {
   data: () => ({
     drawerActive: false,
     drawerItems: [
-      { name: 'Menu', icon: 'mdi-silverware', path: 'menu' },
+      { name: 'Menu', icon: 'mdi-book-open-outline', path: 'menu' },
       { name: 'Resvervation', icon: 'mdi-calendar-clock', path: 'reservation' },
       { name: 'My Orders', icon: 'mdi-checkbox-multiple-blank-outline', path: 'orders' },
     ],

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-card
+    <v-flex
+      fill-height
       class="mx-auto mb-10"
     >
 
@@ -58,7 +59,7 @@
 
         <v-card-text>
           <v-chip-group
-            active-class="primary--text"
+            active-class="green--text"
             column
           >
             <v-chip v-for="(option, index) in variant.options" :key="index" v-model="option.selected">{{ option.name }}</v-chip>
@@ -69,33 +70,27 @@
 
       </div>
 
-      <v-card-title>Quantity: {{ quantity }}</v-card-title>
-      <v-col cols="12">
-        <v-slider
-          v-model="quantity"
-          step="1"
-          min="1"
-          max="20"
-          ticks
-          color="green darken-2"
-        ></v-slider>
-      </v-col>
-    </v-card>
+      <v-card-title>Quantity</v-card-title>
+      <v-row class="mx-3 mb-10" align="center">
+        <v-btn icon color="green darken-2" @click="quantity > 1 && quantity--"><v-icon>mdi-minus</v-icon></v-btn>
+        <div class="mx-2">{{ quantity }}</div>
+        <v-btn icon color="green darken-2" @click="quantity++"><v-icon>mdi-plus</v-icon></v-btn>
+      </v-row>
 
-    <v-footer
-      fixed
-      class="font-weight-medium px-2"
-    >
+    </v-flex>
+
+    <v-row justify="center" class="ma-5">
       <v-btn
         height="4.5vh"
         dark
         color="green darken-2"
         width="100%"
         :style="{ borderRadius: 5 }"
+        @click="addToOrder"
       >
         ADD TO ORDER
       </v-btn>
-    </v-footer>
+    </v-row>
 
   </div>
 </template>
@@ -123,7 +118,7 @@
     methods: {
 
       addToOrder() {
-        console.log('Adding...')
+        this.$router.push({ name: 'Menu' });
       },
       log() {
         console.log(this.variants)

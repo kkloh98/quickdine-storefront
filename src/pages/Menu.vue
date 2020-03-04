@@ -13,7 +13,6 @@
         style="font-size: 11px;"
       >
         {{ item }}
-        <v-icon v-if="icons">mdi-phone</v-icon>
       </v-tab>
 
       <v-tab-item

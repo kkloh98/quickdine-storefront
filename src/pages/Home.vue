@@ -45,19 +45,26 @@
       </v-row> -->
 
       <v-btn :to="`/stores/${$route.params.store_id}/menu`" class="my-5" width="100%" max-width="100%" tile outlined color="green darken-2" style="border-radius: 5px;">
-        <v-icon left class="mr-4">mdi-silverware</v-icon> Expore Our Menu
+        <v-icon left size="17" class="mr-4">mdi-book-open-outline</v-icon> Expore Our Menu
       </v-btn>
 
-      <h4>Recommended</h4>
-      <v-layout row class="ma-0">
-        <v-list style="max-height: 220px; display: flex; overflow-x: auto; overflow-y: hidden">
-          <PopularProductCard/>
-          <PopularProductCard/>
-          <PopularProductCard/>
-          <PopularProductCard/>
-          <PopularProductCard/>
-        </v-list>
-      </v-layout>
+      <div class="mb-5">
+        <v-card-subtitle class="pl-0 pb-1 font-weight-bold">WE THINK YOU'LL LIKE</v-card-subtitle>
+        <v-row class="ma-0">
+          <v-list style="max-height: 220px; display: flex; overflow-x: auto; overflow-y: hidden">
+            <PopularProductCard v-for="i in 5" :key="i"/>
+          </v-list>
+        </v-row>
+      </div>
+
+      <div class="mb-5">
+        <v-card-subtitle class="pl-0 pb-1 font-weight-bold">RECOMMENDED PRODUCTS</v-card-subtitle>
+        <v-row class="ma-0">
+          <v-list style="max-height: 220px; display: flex; overflow-x: auto; overflow-y: hidden">
+            <PopularProductCard v-for="i in 5" :key="i"/>
+          </v-list>
+        </v-row>
+      </div>
 
       <!-- <v-layout row class="mt-4">
         <v-card-title class="ma-0 px-2" style="font-size: 23px;">Popular</v-card-title>
