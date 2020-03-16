@@ -25,25 +25,27 @@
         <v-divider/>
         <router-link
           v-for="(product, j) in collection.products" :key="j"
-          :to="`/stores/1/products/${j}`"
+          :to="`/stores/${$route.params.store_id}/products/${product.id}`"
           style="text-decoration: none;"
         >
           <v-card class="pa-3 my-5">
             <v-row justify="space-around">
               <v-col cols="3" class="text-left">
-                <v-img :src="product.image_url" style="border-radius: 3px;"/>
+                <v-img :src="product.images[0].url" style="border-radius: 3px;"/>
               </v-col>
               <v-col class="text-left font-weight-bold" style="font-size: 15px;">{{ product.name }}</v-col>
-              <v-col class="text-right" style="font-size: 14px;">{{ formatPrice(product.price) }}</v-col>
+              <v-col class="text-right" style="font-size: 14px;">{{ product.price.formatPrice() }}</v-col>
             </v-row>
           </v-card>
         </router-link>
       </v-tab-item>
+
     </v-tabs>
   </v-flex>
 </template>
 
 <script>
+
 export default {
 
   name: 'Menu',
@@ -51,51 +53,60 @@ export default {
   data: () => ({
     tab: null,
     grow: true,
-    tabs: ['Foods', 'Beverages', 'Desserts'],
+    tabs: [],
     collections: [
-      {
-        name: 'Foods',
-        products: Array(3).fill({
-          name: 'Food sample',
-          price: 10.00,
-          image_url: 'https://www.chatelaine.com/wp-content/uploads/2019/01/canada-new-food-guide-2019.jpeg'
-        })
-      },
-      {
-        name: 'Beverages',
-        products: Array(3).fill({
-          name: 'Beverage sample',
-          price: 5.00,
-          image_url: 'https://www.chatelaine.com/wp-content/uploads/2019/01/canada-new-food-guide-2019.jpeg'
-        })
-      },
-      {
-        name: 'Desserts',
-        products: Array(3).fill({
-          name: 'Desserts sample',
-          price: 8.00,
-          image_url: 'https://www.chatelaine.com/wp-content/uploads/2019/01/canada-new-food-guide-2019.jpeg'
-        })
-      }
+      // {
+      //   name: 'Foods',
+      //   products: Array(3).fill({
+      //     name: 'Food sample',
+      //     price: 10.00,
+      //     image_url: 'https://www.chatelaine.com/wp-content/uploads/2019/01/canada-new-food-guide-2019.jpeg'
+      //   })
+      // },
+      // {
+      //   name: 'Beverages',
+      //   products: Array(3).fill({
+      //     name: 'Beverage sample',
+      //     price: 5.00,
+      //     image_url: 'https://www.chatelaine.com/wp-content/uploads/2019/01/canada-new-food-guide-2019.jpeg'
+      //   })
+      // },
+      // {
+      //   name: 'Desserts',
+      //   products: Array(3).fill({
+      //     name: 'Desserts sample',
+      //     price: 8.00,
+      //     image_url: 'https://www.chatelaine.com/wp-content/uploads/2019/01/canada-new-food-guide-2019.jpeg'
+      //   })
+      // }
     ],
   }),
 
   methods: {
 
-    formatPrice(price) {
-      return price.toLocaleString(
-        'en-US',
-        {
-          style: 'currency',
-          currency: 'MYR'
-        }
-      );
-    },
+    async listProducts() {
 
+      try {
+
+        var res = await this.apiGet('@store/products')
+
+        this.collections = res.collections
+
+        this.tabs = this.collections.map(collection => collection.name);
+
+      } catch(error) {
+
+        console.log(error)
+
+      }
+
+    },
   },
 
   created() {
-    this.tab = `tab-${this.$route.query.type}`;
+
+    this.listProducts()
+
   }
 
 }

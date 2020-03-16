@@ -1,7 +1,6 @@
 <template>
 
   <v-flex fill-height>
-
     <v-carousel
       height="25vh"
       style="width: 100%;"
@@ -99,8 +98,9 @@ export default {
     images: [
       { id: 1, url: "https://tinyurl.com/tvttsft" },
       { id: 2, url: "https://singlestroke.io/wp-content/uploads/2015/10/high-quality-food-stock-photos-thumbnail.jpg" },
-    ]
-  })
+    ],
+    email: ""
+  }),
 
 }
 
