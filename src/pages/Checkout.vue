@@ -1,20 +1,30 @@
 <template>
   <transition name="slide-right">
     <v-flex fill-height>
-      <v-card class="ma-3" v-for="item in cart.orders" :key="item.variant_id">
+      <v-card class="ma-3" v-for="item in cart.items" :key="item.variant_id">
         <v-row align="center" justify="space-around" class="px-3">
-          <v-btn icon color="green darken-2" @click="minusQuantity(item.variant_id)"><v-icon size="15">mdi-minus</v-icon></v-btn>
+          <v-btn icon color="green darken-2" @click="minusQuantity(item.variant_id)">
+            <v-icon size="15">mdi-minus</v-icon>
+          </v-btn>
           <span style="font-size: 13px;">{{ item.quantity }}</span>
-          <v-btn icon color="green darken-2" @click="plusQuantity(item.variant_id)"><v-icon size="15">mdi-plus</v-icon></v-btn>
-          <v-col class="text-truncate text-left" style="font-size: 13px;">{{ item.name }}</v-col>
-          <v-col class="font-weight-medium text-right" style="font-size: 13px;">{{ formatPrice(item.price * item.quantity) }}</v-col>
+          <v-btn icon color="green darken-2" @click="plusQuantity(item.variant_id)">
+            <v-icon size="15">mdi-plus</v-icon>
+          </v-btn>
+          <v-col class="text-truncate text-left" style="font-size: 13px;">{{ item.product.name }}</v-col>
+          <v-col
+            class="font-weight-medium text-right"
+            style="font-size: 13px;"
+          >{{ (item.total_price * item.quantity).formatPrice() }}</v-col>
         </v-row>
       </v-card>
       <div class="my-5"></div>
       <v-card class="px-3 mx-3">
         <v-row justify="space-between" class="py-2">
           <v-col class="text-left" style="font-size: 13px;">Subtotal</v-col>
-          <v-col class="text-right font-weight-medium" style="font-size: 13px;">{{ formatPrice(total_price) }}</v-col>
+          <v-col
+            class="text-right font-weight-medium"
+            style="font-size: 13px;"
+          >{{ total_price.formatPrice() }}</v-col>
         </v-row>
         <v-row justify="space-between" class="py-2">
           <v-col class="text-left" style="font-size: 13px;">Delivery fee</v-col>
@@ -24,115 +34,110 @@
           <v-col class="text-left" style="font-size: 13px;">Discount</v-col>
           <v-col class="text-right font-weight-medium" style="font-size: 13px;">MYR 0.00</v-col>
         </v-row>
-        <v-divider/>
+        <v-divider />
         <v-row justify="space-between" class="py-2">
           <v-col class="text-left font-weight-black">Total</v-col>
-          <v-col class="text-right font-weight-black">{{ formatPrice(total_price) }}</v-col>
+          <v-col class="text-right font-weight-black">{{ total_price.formatPrice() }}</v-col>
         </v-row>
       </v-card>
 
-      <v-footer
-        fixed
-        class="font-weight-medium pa-5"
-        color="transparent"
-      >
+      <v-footer fixed class="font-weight-medium pa-5" color="transparent">
         <v-btn
           height="4.5vh"
           dark
           color="green darken-2"
           width="100%"
           :style="{ borderRadius: 5 }"
-        >
-          PLACE ORDER
-        </v-btn>
+        >PLACE ORDER</v-btn>
       </v-footer>
-
     </v-flex>
   </transition>
 </template>
 
 <script>
 export default {
-
   name: "Checkout",
 
-  data:() => ({
+  data: () => ({
     cart: {
-      orders: [
-
-      ],
-      total_price: 0,
-    }
+      items: []
+    },
+    total_price: 0
   }),
 
   methods: {
-
-    formatPrice(price) {
-      return price.toLocaleString(
-        'en-US',
-        {
-          style: 'currency',
-          currency: 'MYR'
-        }
+    plusQuantity(product_id) {
+      this.cart.items = this.cart.items.map(item =>
+        item.id === product_id ? { ...item, quantity: item.quantity + 1 } : item
       );
+      localStorage.setItem("cart", JSON.stringify(this.cart));
     },
 
-    plusQuantity(variant_id) {
-      this.cart.orders = this.cart.orders.map(x => x.variant_id === variant_id ? {...x, quantity: x.quantity + 1} : x)
-      localStorage.setItem('cart', JSON.stringify(this.cart));
-    },
-
-    minusQuantity(variant_id) {
-      this.cart.orders = this.cart.orders.map(x => x.variant_id === variant_id ? {...x, quantity: x.quantity - 1} : x)
-      this.cart.orders = this.cart.orders.filter(x => x.quantity > 0);
-      localStorage.setItem('cart', JSON.stringify(this.cart));
+    minusQuantity(product_id) {
+      this.cart.items = this.cart.items.map(item =>
+        item.variant_id === product_id
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      );
+      this.cart.items = this.cart.items.filter(item => item.quantity > 0);
+      localStorage.setItem("cart", JSON.stringify(this.cart));
     },
 
     recalculate() {
-      if(this.cart.orders.length) {
-        this.total_price = this.cart.orders.map(x => x.price * x.quantity).reduce((total, num) => total + num);
+      if (this.cart.items.length) {
+        this.total_price = this.cart.items
+          .map(item => item.total_price * item.quantity)
+          .reduce((total, num) => total + num);
       } else {
         this.total_price = 0;
       }
-    }
+    },
 
+    async placeOrder() {
+      var cart = {
+        items: []
+      };
+
+      this.cart.items.forEach(item => {
+        var variants = [];
+
+        item.variant_types.forEach(type => {
+          var variant = { type_id: type.id, option_ids: [] };
+          type.variant_options.forEach(option => {
+            if (option.is_selected) {
+              variant.option_ids.push(option.id);
+            }
+          });
+          if (variant.option_ids.length) variants.push(variant);
+        });
+
+        cart.items.push({
+          product_id: item.product.id,
+          variants
+        });
+      });
+
+      await this.apiPost("@store/orders", cart).catch(console.error);
+    }
   },
 
   watch: {
-    'cart.orders': {
+    "cart.items": {
       handler() {
         this.recalculate();
       },
-      deep: true,
+      deep: true
     }
   },
 
   created() {
-    var cart = {
-      orders: [
-        {
-          product_id: 1,
-          variant_id: 1,
-          name: 'Mc Chicken',
-          price: 15.00,
-          quantity: 1,
-        },
-        {
-          product_id: 2,
-          variant_id: 2,
-          name: 'Coke',
-          price: 2.00,
-          quantity: 1,
-        }
-      ]
-    };
+    var cart = localStorage.getItem("cart");
 
-    localStorage.setItem('cart', JSON.stringify(cart));
+    cart = cart == undefined ? { items: [] } : JSON.parse(cart);
 
-    this.cart = JSON.parse(localStorage.getItem('cart'));
+    this.cart = cart;
 
     this.recalculate();
   }
-
-}
+};
 </script>

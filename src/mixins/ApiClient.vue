@@ -16,10 +16,7 @@
           url = this.processUrl(url);
 
           this.axios
-            .get(url, {
-              params: params,
-              headers: headers
-            })
+            .get(url, { params, headers })
             .then(res => resolve(res.data))
             .catch(reject);
         });
@@ -58,10 +55,7 @@
           url = this.processUrl(url);
 
           this.axios
-            .delete(url, {
-              params: params,
-              headers: headers
-            })
+            .delete(url, { params, headers })
             .then(res => resolve(res.data))
             .catch(reject);
         });

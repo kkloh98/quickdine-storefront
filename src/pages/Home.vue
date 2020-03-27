@@ -23,9 +23,9 @@
 
     <div class="mx-3">
 
-      <v-card-title class="font-weight-bold pl-0">The Greek Cafe</v-card-title>
+      <v-card-title class="font-weight-bold pl-0">{{store.name}}</v-card-title>
       <v-row justify="space-between">
-        <v-card-subtitle class="py-2" style="font-size: 12px;">2, Jalan Galloway, Bukit Bintang</v-card-subtitle>
+        <v-card-subtitle class="py-2" style="font-size: 12px;">{{store.address}}</v-card-subtitle>
         <v-chip small color="red lighten-4" class="ma-2" style="color: #C62828; font-size: 10px;">
           <v-icon size="12" class="mr-1">mdi-clock-outline</v-icon>Closes in 2hrs
         </v-chip>
@@ -65,17 +65,6 @@
         </v-row>
       </div>
 
-      <!-- <v-layout row class="mt-4">
-        <v-card-title class="ma-0 px-2" style="font-size: 23px;">Popular</v-card-title>
-        <v-list style="max-height: 200px; display: flex; overflow-x: auto; overflow-y: hidden">
-          <PopularProductCard/>
-          <PopularProductCard/>
-          <PopularProductCard/>
-          <PopularProductCard/>
-          <PopularProductCard/>
-        </v-list>
-      </v-layout> -->
-
     </div>
 
   </v-flex>
@@ -95,12 +84,28 @@ export default {
   },
 
   data: () => ({
+    store: null,
     images: [
       { id: 1, url: "https://tinyurl.com/tvttsft" },
       { id: 2, url: "https://singlestroke.io/wp-content/uploads/2015/10/high-quality-food-stock-photos-thumbnail.jpg" },
     ],
-    email: ""
   }),
+
+  methods: {
+    async retrieveStore() {
+      try {
+        var res = await this.apiGet("@store")
+        this.store = res.store
+      }
+      catch(error) {
+        console.log(error)
+      }
+    }
+  },
+
+  created() {
+    this.retrieveStore()
+  }
 
 }
 
