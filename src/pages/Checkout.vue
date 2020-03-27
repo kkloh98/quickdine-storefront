@@ -48,6 +48,7 @@
           color="green darken-2"
           width="100%"
           :style="{ borderRadius: 5 }"
+          @click="placeOrder()"
         >PLACE ORDER</v-btn>
       </v-footer>
     </v-flex>
@@ -101,7 +102,7 @@ export default {
       this.cart.items.forEach(item => {
         var variants = [];
 
-        item.variant_types.forEach(type => {
+        item.product.variant_types.forEach(type => {
           var variant = { type_id: type.id, option_ids: [] };
           type.variant_options.forEach(option => {
             if (option.is_selected) {
@@ -117,7 +118,12 @@ export default {
         });
       });
 
-      await this.apiPost("@store/orders", cart).catch(console.error);
+      var res = await this.apiPost("@store/orders", cart).catch(console.error);
+
+      if (res.success) {
+        localStorage.removeItem("cart");
+        this.$router.push(`/stores/${this.$route.params.store_id}`);
+      }
     }
   },
 
