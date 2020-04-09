@@ -99,26 +99,8 @@ export default {
     product: {
       variants: [],
       images: [],
-      combinations: []
     },
     quantity: 1,
-    variants: [
-      {
-        type: { id: 1, name: "Size" },
-        options: [
-          { id: 1, name: "Small", selected: true },
-          { id: 2, name: "Medium", selected: false },
-          { id: 3, name: "Large", selected: false }
-        ]
-      },
-      {
-        type: { id: 2, name: "Color" },
-        options: [
-          { id: 4, name: "Red", selected: true },
-          { id: 5, name: "Blue", selected: false }
-        ]
-      }
-    ]
   }),
   methods: {
     async retrieveProduct() {

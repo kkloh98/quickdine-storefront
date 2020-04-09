@@ -1,5 +1,6 @@
 <script>
 import Axios from "axios";
+import Cookies from "js-cookie";
 
 export default {
   data: () => ({
@@ -63,6 +64,10 @@ export default {
     },
 
     processUrl(url) {
+      var token = Cookies.get("token");
+
+      this.token = token == undefined ? null : token;
+
       if (url.includes("@store")) {
         url =
           "/storefront" +

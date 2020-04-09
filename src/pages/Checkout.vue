@@ -41,8 +41,27 @@
         </v-row>
       </v-card>
 
+      <v-menu v-if="cart.items.length" transition="slide-y-transition" bottom max-height="50%">
+        <template v-slot:activator="{ on }">
+          <v-col cols="12">
+            <v-btn
+              style="width: 100%;"
+              color="green darken-2"
+              outlined
+              v-on="on"
+            >{{ selected_table ? `Table ${selected_table.number}` : 'Choose your table' }}</v-btn>
+          </v-col>
+        </template>
+        <v-list>
+          <v-list-item v-for="(table, i) in tables" :key="i" @click="selected_table = table">
+            <v-list-item-title>{{ table.number }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
       <v-footer fixed class="font-weight-medium pa-5" color="transparent">
         <v-btn
+          v-if="cart.items.length"
           height="4.5vh"
           dark
           color="green darken-2"
@@ -50,6 +69,15 @@
           :style="{ borderRadius: 5 }"
           @click="placeOrder()"
         >PLACE ORDER</v-btn>
+        <v-btn
+          v-else
+          height="4.5vh"
+          dark
+          color="green darken-2"
+          width="100%"
+          :style="{ borderRadius: 5 }"
+          @click="$router.push(`/stores/${$route.params.store_id}/menu`)"
+        >BACK TO THE MENU</v-btn>
       </v-footer>
     </v-flex>
   </transition>
@@ -63,7 +91,9 @@ export default {
     cart: {
       items: []
     },
-    total_price: 0
+    total_price: 0,
+    tables: [],
+    selected_table: null
   }),
 
   methods: {
@@ -114,7 +144,8 @@ export default {
 
         cart.items.push({
           product_id: item.product.id,
-          variants
+          variants,
+          quantity: item.quantity
         });
       });
 
@@ -123,6 +154,14 @@ export default {
       if (res.success) {
         localStorage.removeItem("cart");
         this.$router.push(`/stores/${this.$route.params.store_id}`);
+      }
+    },
+
+    async listTables() {
+      var res = await this.apiGet("@store/tables").catch(console.error);
+
+      if (res.success) {
+        this.tables = res.tables;
       }
     }
   },
@@ -144,6 +183,8 @@ export default {
     this.cart = cart;
 
     this.recalculate();
+
+    this.listTables();
   }
 };
 </script>

@@ -3,10 +3,17 @@
     <v-navigation-drawer app v-model="drawerActive">
       <v-layout column style="background-color: #388E3C; height: 25%;">
         <v-spacer />
-        <v-btn v-if="!isLoggedIn" text dark style="font-size: 12px;" @click="loginDialogActive = true"
-          >Log in / Create account</v-btn
-        >
-        <v-btn v-else text dark style="font-size: 12px;" @click="logout()">Logout</v-btn>
+        <v-btn
+          v-if="!isLoggedIn"
+          text
+          dark
+          style="font-size: 12px;"
+          @click="loginDialogActive = true"
+        >Log in / Create account</v-btn>
+        <v-btn v-else text dark style="font-size: 12px;" @click="logout()">
+          Logout
+          <v-icon class="mx-2" size="14">mdi-logout</v-icon>
+        </v-btn>
       </v-layout>
       <v-list dense>
         <v-list-item
@@ -33,9 +40,12 @@
       </router-link>
       <v-spacer />
       <!-- <v-icon color="green darken-2" @click.stop="cartDrawerActive = !cartDrawerActive">mdi-basket-outline</v-icon> -->
-      <router-link :to="`/stores/${$route.params.store_id}/checkout`" style="text-decoration: none;"
-        ><v-icon color="green darken-2">mdi-cart-outline</v-icon></router-link
+      <router-link
+        :to="`/stores/${$route.params.store_id}/checkout`"
+        style="text-decoration: none;"
       >
+        <v-icon color="green darken-2">mdi-cart-outline</v-icon>
+      </router-link>
     </v-app-bar>
 
     <LoginDialog v-model="loginDialogActive" />
@@ -43,40 +53,43 @@
 </template>
 
 <script>
-import LoginDialog from '@/components/LoginDialog'
-import Cookies from 'js-cookie'
+import LoginDialog from "@/components/LoginDialog";
+import Cookies from "js-cookie";
 
 export default {
-  name: 'NavBar',
+  name: "NavBar",
 
   components: {
-    LoginDialog,
+    LoginDialog
   },
 
   data: () => ({
     isLoggedIn: false,
     drawerActive: false,
     drawerItems: [
-      { name: 'Menu', icon: 'mdi-book-open-outline', path: 'menu' },
-      { name: 'Resvervation', icon: 'mdi-calendar-clock', path: 'reservation' },
-      { name: 'My Orders', icon: 'mdi-checkbox-multiple-blank-outline', path: 'orders' },
+      { name: "Menu", icon: "mdi-book-open-outline", path: "menu" },
+      {
+        name: "My Orders",
+        icon: "mdi-checkbox-multiple-blank-outline",
+        path: "orders"
+      }
     ],
-    loginDialogActive: false,
+    loginDialogActive: false
   }),
 
   methods: {
     logout() {
-      Cookies.remove('token')
-      this.isLoggedIn = false
-    },
+      Cookies.remove("token");
+      this.isLoggedIn = false;
+    }
   },
 
   created() {
-    const token = Cookies.get('token')
+    const token = Cookies.get("token");
 
     if (token && token.store_id == this.$route.params.store_id) {
-      this.isLoggedIn = true
+      this.isLoggedIn = true;
     }
-  },
-}
+  }
+};
 </script>
