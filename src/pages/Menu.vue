@@ -1,12 +1,7 @@
 <template>
   <v-flex fill-height class="pt-3">
     <v-tabs v-model="tab" grow height="40" color="green darken-2">
-      <v-tab
-        v-for="(item, i) in tabs"
-        :key="i"
-        :href="`#tab-${i}`"
-        style="font-size: 11px;"
-      >{{ item }}</v-tab>
+      <v-tab v-for="(item, i) in tabs" :key="i" :href="`#tab-${i}`" style="font-size: 11px;">{{ item }}</v-tab>
 
       <v-tab-item v-for="(collection, i) in collections" :key="i" :value="'tab-' + i" class="px-3">
         <v-card-title class="my-5">{{ collection.name }}</v-card-title>
@@ -34,31 +29,31 @@
 
 <script>
 export default {
-  name: "Menu",
+  name: 'Menu',
 
   data: () => ({
     tab: null,
     grow: true,
     tabs: [],
-    collections: []
+    collections: [],
   }),
 
   methods: {
     async listProducts() {
       try {
-        var res = await this.apiGet("@store/collections");
+        var res = await this.apiGet('@store/collections')
 
-        this.collections = res.collections;
+        this.collections = res.collections
 
-        this.tabs = this.collections.map(collection => collection.name);
+        this.tabs = this.collections.map((collection) => collection.name)
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-    }
+    },
   },
 
   created() {
-    this.listProducts();
-  }
-};
+    this.listProducts()
+  },
+}
 </script>

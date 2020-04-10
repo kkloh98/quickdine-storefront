@@ -43,8 +43,14 @@
     </div>-->
 
     <div v-for="(type, i) in product.variant_types" :key="i" class="px-5">
-      <v-card-title class="px-0">{{type.name}}</v-card-title>
-      <v-radio-group v-if="type.is_required" v-model="type.is_selected">
+      <v-row justify="space-between" align="center">
+        <v-card-title class="px-0">{{type.name}}</v-card-title>
+        <v-card-title
+          class="px-0"
+          style="font-size: 12px; color: grey;"
+        >{{type.is_required ? `Min 1, Max ${type.options_limit}` : type.options_limit > 0 ? `Choose up to ${type.options_limit}` : ''}}</v-card-title>
+      </v-row>
+      <!-- <v-radio-group v-if="type.is_required && type.options_limit == 1">
         <v-row
           v-for="(option, j) in type.variant_options"
           :key="j"
@@ -55,16 +61,21 @@
           <v-radio :label="option.name" v-model="option.is_selected"></v-radio>
           <p class="price">+ {{option.add_price.formatPrice()}}</p>
         </v-row>
-      </v-radio-group>
+      </v-radio-group>-->
       <v-row
-        v-else
         v-for="(option, j) in type.variant_options"
         :key="j"
         justify="space-between"
         align="center"
         class="px-2"
       >
-        <v-checkbox v-model="option.is_selected" :label="option.name" color="green darken-2"></v-checkbox>
+        <v-checkbox
+          v-model="option.is_selected"
+          :label="option.name"
+          @change="checkLimit(i)"
+          color="green darken-2"
+          :disabled="option.is_disabled"
+        ></v-checkbox>
         <p class="price">+ {{option.add_price.formatPrice()}}</p>
       </v-row>
     </div>
@@ -97,10 +108,9 @@
 export default {
   data: () => ({
     product: {
-      variants: [],
-      images: [],
+      images: []
     },
-    quantity: 1,
+    quantity: 1
   }),
   methods: {
     async retrieveProduct() {
@@ -111,14 +121,18 @@ export default {
 
         this.product = res.product;
 
-        this.product.variant_types = this.product.variant_types.map(type => {
-          type.variant_options = type.variant_options.map((option, i) => {
-            option.is_selected = false;
-            if (type.is_required && i == 0) option.is_selected = true;
-            return option;
-          });
-          return type;
-        });
+        this.product.variant_types = this.product.variant_types.map(
+          (type, i) => {
+            type.variant_options = type.variant_options.map((option, j) => {
+              option.is_selected = false;
+              option.is_selected = type.is_required && j == 0;
+              option.is_disabled = false;
+              return option;
+            });
+            this.checkLimit(i);
+            return type;
+          }
+        );
       } catch (error) {
         console.log(error);
       }
@@ -141,6 +155,38 @@ export default {
       });
       localStorage.setItem("cart", JSON.stringify(cart));
       this.$router.push({ name: "Menu" });
+    },
+
+    checkLimit(i) {
+      var type = this.product.variant_types[i];
+
+      if (type.options_limit <= 0) return;
+
+      var numChecked = this.product.variant_types[i].variant_options.filter(
+        option => option.is_selected
+      ).length;
+
+      if (numChecked >= this.product.variant_types[i].options_limit) {
+        this.product.variant_types[
+          i
+        ].variant_options = this.product.variant_types[i].variant_options.map(
+          option => {
+            if (!option.is_selected) {
+              option.is_disabled = true;
+            }
+            return option;
+          }
+        );
+      } else {
+        this.product.variant_types[
+          i
+        ].variant_options = this.product.variant_types[i].variant_options.map(
+          option => {
+            option.is_disabled = false;
+            return option;
+          }
+        );
+      }
     }
   },
   created() {

@@ -19,9 +19,9 @@
     </v-carousel>
 
     <div class="mx-3">
-      <v-card-title class="font-weight-bold pl-0">{{store ? store.name : ''}}</v-card-title>
+      <v-card-title class="font-weight-bold pl-0">{{ store ? store.name : '' }}</v-card-title>
       <v-row justify="space-between">
-        <v-card-subtitle class="py-2" style="font-size: 12px;">{{store ? store.address : ''}}</v-card-subtitle>
+        <v-card-subtitle class="py-2" style="font-size: 12px;">{{ store ? store.address : '' }}</v-card-subtitle>
         <v-chip small color="red lighten-4" class="ma-2" style="color: #C62828; font-size: 10px;">
           <v-icon size="12" class="mr-1">mdi-clock-outline</v-icon>Closes in 2hrs
         </v-chip>
@@ -40,7 +40,7 @@
       </v-row>-->
 
       <v-btn
-        :to="`/stores/${$route.params.store_id}/menu`"
+        :to="`/stores/${this.$route.params.store_id}/menu`"
         class="my-5"
         width="100%"
         max-width="100%"
@@ -89,45 +89,42 @@
 </template>
 
 <script>
-import CollectionItemCard from "@/components/CollectionItemCard";
+import CollectionItemCard from '@/components/CollectionItemCard'
 
 export default {
-  name: "Home",
+  name: 'Home',
 
   components: {
-    CollectionItemCard
+    CollectionItemCard,
   },
 
   data: () => ({
     store: null,
     images: [
-      { id: 1, url: "https://tinyurl.com/tvttsft" },
+      { id: 1, url: 'https://tinyurl.com/tvttsft' },
       {
         id: 2,
-        url:
-          "https://singlestroke.io/wp-content/uploads/2015/10/high-quality-food-stock-photos-thumbnail.jpg"
-      }
+        url: 'https://singlestroke.io/wp-content/uploads/2015/10/high-quality-food-stock-photos-thumbnail.jpg',
+      },
     ],
-    collections: []
+    collections: [],
   }),
 
   methods: {
     async retrieveStore() {
-      var res = await this.apiGet("@store").catch(console.error);
-      this.store = res.store;
+      var res = await this.apiGet('@store').catch(console.error)
+      this.store = res.store
     },
 
     async listCollections() {
-      var res = await this.apiGet("@store/collections").catch(console.error);
-      this.collections = res.collections.filter(
-        collection => collection.name !== "All"
-      );
-    }
+      var res = await this.apiGet('@store/collections').catch(console.error)
+      this.collections = res.collections.filter((collection) => collection.name !== 'All')
+    },
   },
 
   created() {
-    this.retrieveStore();
-    this.listCollections();
-  }
-};
+    this.retrieveStore()
+    this.listCollections()
+  },
+}
 </script>

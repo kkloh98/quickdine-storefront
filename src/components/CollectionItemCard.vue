@@ -25,8 +25,8 @@
 
 <script>
 export default {
-  name: "CollectionItemCard",
+  name: 'CollectionItemCard',
 
-  props: ["id", "name", "image_url"]
-};
+  props: ['id', 'name', 'image_url'],
+}
 </script>

@@ -7,33 +7,38 @@ const routes = [
   {
     path: '/stores/:store_id',
     name: 'Home',
-    component: () => import('@/pages/Home.vue')
+    component: () => import('@/pages/Home.vue'),
   },
   {
     path: '/stores/:store_id/products',
     name: 'Products',
-    component: () => import('@/pages/Products.vue')
+    component: () => import('@/pages/Products.vue'),
   },
   {
     path: '/stores/:store_id/products/:product_id',
     name: 'Product Detail',
-    component: () => import('@/pages/ProductDetail.vue')
+    component: () => import('@/pages/ProductDetail.vue'),
   },
   {
     path: '/stores/:store_id/menu',
     name: 'Menu',
-    component: () => import('@/pages/Menu.vue')
+    component: () => import('@/pages/Menu.vue'),
   },
   {
     path: '/stores/:store_id/checkout',
     name: 'Checkout',
-    component: () => import('@/pages/Checkout.vue')
-  }
+    component: () => import('@/pages/Checkout.vue'),
+  },
+  {
+    path: '/not-found',
+    name: 'NotFound',
+    component: () => import('@/pages/NotFound.vue'),
+  },
 ]
 
 const router = new VueRouter({
   mode: 'history',
-  routes
+  routes,
 })
 
 export default router

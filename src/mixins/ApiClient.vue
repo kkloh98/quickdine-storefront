@@ -1,87 +1,85 @@
 <script>
-import Axios from "axios";
-import Cookies from "js-cookie";
+import Axios from 'axios'
+import Cookies from 'js-cookie'
 
 export default {
   data: () => ({
     axios: null,
     token: null,
-    base_url: "https://quickdineapi.herokuapp.com"
+    base_url: 'https://quickdineapi.herokuapp.com',
     // base_url: "http://localhost:8000"
   }),
 
   methods: {
-    apiGet(url = "/", params = {}, headers = {}) {
-      headers["Authorization"] = `Bearer ${this.token}`;
+    apiGet(url = '/', params = {}, headers = {}) {
+      url = this.init(url)
 
-      return new Promise((resolve, reject) => {
-        url = this.processUrl(url);
+      headers['Authorization'] = `Bearer ${this.token}`
 
+      return new Promise((resolve) => {
         this.axios
           .get(url, { params, headers })
-          .then(res => resolve(res.data))
-          .catch(reject);
-      });
+          .then((res) => resolve(res.data))
+          .catch((e) => e.response.status == 404 && this.$router.push('/not-found'))
+      })
     },
 
-    apiPost(url = "/", body = {}, headers = {}) {
-      headers["Authorization"] = `Bearer ${this.token}`;
+    apiPost(url = '/', body = {}, headers = {}) {
+      url = this.init(url)
 
-      return new Promise((resolve, reject) => {
-        url = this.processUrl(url);
+      headers['Authorization'] = `Bearer ${this.token}`
 
+      return new Promise((resolve) => {
         this.axios
           .post(url, body, { headers })
-          .then(res => resolve(res.data))
-          .catch(reject);
-      });
+          .then((res) => resolve(res.data))
+          .catch((e) => e.response.status == 404 && this.$router.push('/not-found'))
+      })
     },
 
-    apiPut(url = "/", body = {}, headers = {}) {
-      headers["Authorization"] = `Bearer ${this.token}`;
+    apiPut(url = '/', body = {}, headers = {}) {
+      url = this.init(url)
 
-      return new Promise((resolve, reject) => {
-        url = this.processUrl(url);
+      headers['Authorization'] = `Bearer ${this.token}`
 
+      return new Promise((resolve) => {
         this.axios
           .put(url, body, { headers })
-          .then(res => resolve(res.data))
-          .catch(reject);
-      });
+          .then((res) => resolve(res.data))
+          .catch((e) => e.response.status == 404 && this.$router.push('/not-found'))
+      })
     },
 
-    apiDelete(url = "/", params = {}, headers = {}) {
-      headers["Authorization"] = `Bearer ${this.token}`;
+    apiDelete(url = '/', params = {}, headers = {}) {
+      url = this.init(url)
 
-      return new Promise((resolve, reject) => {
-        url = this.processUrl(url);
+      headers['Authorization'] = `Bearer ${this.token}`
 
+      return new Promise((resolve) => {
         this.axios
           .delete(url, { params, headers })
-          .then(res => resolve(res.data))
-          .catch(reject);
-      });
+          .then((res) => resolve(res.data))
+          .catch((e) => e.response.status == 404 && this.$router.push('/not-found'))
+      })
     },
 
-    processUrl(url) {
-      var token = Cookies.get("token");
+    init(url) {
+      var token = Cookies.get('token')
 
-      this.token = token == undefined ? null : token;
+      this.token = token == undefined ? null : JSON.parse(token).value
 
-      if (url.includes("@store")) {
-        url =
-          "/storefront" +
-          url.replace("@store", `/stores/${this.$route.params.store_id}`);
+      if (url.includes('@store')) {
+        url = '/storefront' + url.replace('@store', `/stores/${this.$route.params.store_id}`)
       }
-      return url;
-    }
+      return url
+    },
   },
 
   created() {
     this.axios = Axios.create({
       baseURL: this.base_url,
-      timeout: 100000
-    });
-  }
-};
+      timeout: 100000,
+    })
+  },
+}
 </script>
